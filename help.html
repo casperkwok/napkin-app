@@ -1,0 +1,543 @@
+<meta charset="utf-8">
+<title>Napkin — Help</title>
+<span hidden data-title-en="Napkin — Help" data-title-zh="Napkin — 帮助"></span>
+<meta name="description" content="Napkin syntax reference: units, percentages, variables, dates, A/B testing and uncertainty.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="base.css">
+<script>
+  /* 必须在渲染前定语言，否则会闪一帧英文再跳中文 */
+  (function(){var l;try{l=localStorage.getItem('napkin-lang')}catch(e){}
+   document.documentElement.setAttribute('data-lang', l||'en');})();
+</script>
+
+<style>
+  .doc { display: grid; gap: 40px; padding: 40px 0 0; }
+  @media (min-width: 940px) {
+    .doc { grid-template-columns: 190px minmax(0,1fr); gap: 56px; align-items: start; padding-top: 52px; }
+    .toc { position: sticky; top: 76px; }
+  }
+
+  /* ── 目录 ─────────────────────────────── */
+  .toc ol { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  .toc a {
+    display: block; padding: 5px 0; font-size: 13px;
+    color: var(--gray); text-decoration: none;
+    border-left: 2px solid transparent; padding-left: 12px;
+  }
+  .toc a:hover { color: var(--ink); border-left-color: var(--hair); }
+  .toc .tochead {
+    font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--gray-2); margin: 0 0 10px; padding-left: 12px;
+  }
+
+  /* ── 正文 ─────────────────────────────── */
+  .doc h1 {
+    font-size: clamp(30px, 4vw, 40px); line-height: 1.1;
+    letter-spacing: -.026em; margin: 0 0 10px;
+  }
+  .doc > article > p.intro {
+    font-size: 17px; color: var(--gray); margin: 0 0 44px; max-width: 62ch;
+  }
+  section { scroll-margin-top: 68px; padding-bottom: 40px; }
+  section + section { border-top: 1px solid var(--hair); padding-top: 36px; }
+  h2 {
+    font-size: 22px; letter-spacing: -.018em; margin: 0 0 6px;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  h2 .num { font: 500 12px/1 var(--mono); color: var(--amber); }
+  h3 { font-size: 15px; margin: 26px 0 8px; }
+  section p { color: var(--gray); margin: 0 0 14px; max-width: 62ch; font-size: 14.5px; }
+  section p.lead { margin-bottom: 22px; }
+
+  /* ── 示例：左算式右结果，和 App 里一个样 ── */
+  .ex {
+    font-family: var(--mono); font-size: 13px; line-height: 1.85;
+    background: var(--bg-2); border-radius: 10px;
+    padding: 14px 16px; margin: 0 0 16px; overflow-x: auto;
+  }
+  .ex .row { display: flex; justify-content: space-between; gap: 24px; white-space: pre; }
+  .ex .row + .row { margin-top: 1px; }
+  .ex .res { color: var(--green); flex: none; }
+  .ex .res.err { color: var(--red); }
+  .ex .res.dim { color: var(--gray-2); }
+  .ex .cmt { color: var(--gray-2); }
+
+  code {
+    font-family: var(--mono); font-size: .9em;
+    background: var(--bg-2); padding: 1px 5px; border-radius: 4px;
+  }
+  .ex code { background: none; padding: 0; }
+
+  /* ── 表 ───────────────────────────────── */
+  table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  th { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-2); font-weight: 500; }
+  td:first-child { white-space: nowrap; }
+  td code { background: none; padding: 0; }
+
+  .note {
+    border-left: 2px solid var(--amber);
+    padding: 2px 0 2px 14px; margin: 0 0 16px;
+    font-size: 13.5px; color: var(--gray); max-width: 62ch;
+  }
+  .note b { color: var(--ink); font-weight: 600; }
+</style>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="./"><span class="mark"></span>Napkin</a>
+    <span class="navlinks">
+      <a href="./"><span lang="en">Home</span><span lang="zh">首页</span></a>
+      <a href="https://github.com/casperkwok/napkin-app/releases"><span lang="en">Download</span><span lang="zh">下载</span></a>
+      <span class="langtoggle">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="zh">中</button>
+      </span>
+    </span>
+  </div>
+</nav>
+
+<div class="wrap doc">
+
+  <aside class="toc">
+    <p class="tochead"><span lang="en">Contents</span><span lang="zh">目录</span></p>
+    <ol>
+      <li><a href="#start"><span lang="en">Getting started</span><span lang="zh">上手</span></a></li>
+      <li><a href="#math"><span lang="en">Numbers &amp; math</span><span lang="zh">数字与运算</span></a></li>
+      <li><a href="#units"><span lang="en">Units</span><span lang="zh">单位</span></a></li>
+      <li><a href="#pct"><span lang="en">Percentages</span><span lang="zh">百分比</span></a></li>
+      <li><a href="#vars"><span lang="en">Variables</span><span lang="zh">变量</span></a></li>
+      <li><a href="#dates"><span lang="en">Dates &amp; time</span><span lang="zh">日期与时间</span></a></li>
+      <li><a href="#ab"><span lang="en">A/B testing</span><span lang="zh">A/B 实验</span></a></li>
+      <li><a href="#uncert"><span lang="en">Uncertainty</span><span lang="zh">区间估算</span></a></li>
+      <li><a href="#keys"><span lang="en">Shortcuts</span><span lang="zh">快捷键</span></a></li>
+      <li><a href="#limits"><span lang="en">Known limits</span><span lang="zh">已知限制</span></a></li>
+    </ol>
+  </aside>
+
+  <article>
+    <h1><span lang="en">Help</span><span lang="zh">帮助</span></h1>
+    <p class="intro">
+      <span lang="en">Everything Napkin understands, with a working example for each.
+        You never have to memorize any of it — plain arithmetic works from the first line,
+        and the rest is here when you need it.</span>
+      <span lang="zh">Napkin 认得的所有写法，每条都配一个真实可跑的例子。
+        不需要背——直接写算术就能用，剩下的等要用时回来查。</span>
+    </p>
+
+    <!-- ══ 1 ══════════════════════════════ -->
+    <section id="start">
+      <h2><span class="num">01</span><span lang="en">Getting started</span><span lang="zh">上手</span></h2>
+      <p class="lead">
+        <span lang="en">Press <kbd>⌥</kbd><kbd>Space</kbd> anywhere to bring Napkin up.
+          Type one thing per line; the answer appears on the right as you type.
+          Press <kbd>Esc</kbd> to put it away — focus returns to whatever you were doing.</span>
+        <span lang="zh">在任何地方按 <kbd>⌥</kbd><kbd>Space</kbd> 呼出 Napkin。
+          一行写一件事，右边随打随出结果。按 <kbd>Esc</kbd> 收起，
+          焦点回到你刚才那个窗口。</span>
+      </p>
+      <div class="ex" lang="en">
+        <div class="row"><code>2 + 3 × 4</code><span class="res">14</span></div>
+        <div class="row"><code>price = $12/user</code><span class="res">$12/user</span></div>
+        <div class="row"><code>40 users × price</code><span class="res">$480.00</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>2 + 3 × 4</code><span class="res">14</span></div>
+        <div class="row"><code>单价 = ¥12/user</code><span class="res">¥12/人</span></div>
+        <div class="row"><code>40 users × 单价</code><span class="res">¥480.00</span></div>
+      </div>
+      <p>
+        <span lang="en">A line that isn't a calculation is just a note — write whatever
+          you want between the numbers. Incomplete lines stay silent instead of
+          flashing an error at you mid-keystroke.</span>
+        <span lang="zh">不是算式的行就当注解，数字之间想写什么写什么。
+          没写完的行会保持安静，不会打到一半就红给你看。</span>
+      </p>
+    </section>
+
+    <!-- ══ 2 ══════════════════════════════ -->
+    <section id="math">
+      <h2><span class="num">02</span><span lang="en">Numbers &amp; math</span><span lang="zh">数字与运算</span></h2>
+      <table>
+        <tr><th><span lang="en">Write</span><span lang="zh">写法</span></th>
+            <th><span lang="en">What it does</span><span lang="zh">作用</span></th></tr>
+        <tr><td><code>+ - × ÷ ^</code></td>
+            <td><span lang="en"><code>*</code> and <code>/</code> work too, as does the fullwidth <code>＋</code></span>
+                <span lang="zh"><code>*</code> <code>/</code> 也行，全角 <code>＋</code> 也认</span></td></tr>
+        <tr><td><code>1,250,000</code></td>
+            <td><span lang="en">Thousands separators are ignored — commas or spaces</span>
+                <span lang="zh">千分位随便写，逗号或空格都忽略</span></td></tr>
+        <tr><td><code>1.5k</code> · <code>2M</code> · <code>3B</code></td>
+            <td><span lang="en">Scale suffixes. <b>Case matters</b>: <code>2M</code> is two million, <code>2m</code> is two metres</span>
+                <span lang="zh">量级后缀。<b>区分大小写</b>：<code>2M</code> 是两百万，<code>2m</code> 是两米</span></td></tr>
+        <tr><td><code>0xFF</code> · <code>0b1010</code> · <code>0o17</code></td>
+            <td><span lang="en">Hex, binary, octal</span><span lang="zh">十六 / 二 / 八进制</span></td></tr>
+        <tr><td><code>&amp; | xor &lt;&lt; &gt;&gt;</code></td>
+            <td><span lang="en">Bitwise operators</span><span lang="zh">位运算</span></td></tr>
+      </table>
+      <p><span lang="en">Functions: <code>sqrt abs round floor ceil min max sin cos tan log ln log2 exp</code></span>
+         <span lang="zh">函数：<code>sqrt abs round floor ceil min max sin cos tan log ln log2 exp</code></span></p>
+      <div class="ex">
+        <div class="row"><code>(2+3)^2</code><span class="res">25</span></div>
+        <div class="row"><code>0xFF</code><span class="res">255</span></div>
+        <div class="row"><code>max(3, 7)</code><span class="res">7</span></div>
+        <div class="row"><code>0.1 + 0.2</code><span class="res">0.3</span></div>
+      </div>
+      <p class="note">
+        <span lang="en">That last one is not a typo. Napkin does money in fixed-point decimal,
+          so <code>0.1 + 0.2</code> is <code>0.3</code> — not <code>0.30000000000000004</code>.</span>
+        <span lang="zh">最后一行不是笔误。Napkin 用定点十进制算钱，
+          <code>0.1 + 0.2</code> 就是 <code>0.3</code>，不是 <code>0.30000000000000004</code>。</span>
+      </p>
+    </section>
+
+    <!-- ══ 3 ══════════════════════════════ -->
+    <section id="units">
+      <h2><span class="num">03</span><span lang="en">Units</span><span lang="zh">单位</span></h2>
+      <p class="lead">
+        <span lang="en">Write the unit next to the number and Napkin carries it through the
+          whole calculation. This is the part that catches mistakes: units that don't
+          match refuse to combine instead of quietly producing a number.</span>
+        <span lang="zh">把单位写在数字旁边，Napkin 会让它跟着整个算式走。
+          拦错就靠这个：单位对不上时它拒绝计算，而不是安静地给你一个数。</span>
+      </p>
+
+      <h3><span lang="en">Converting</span><span lang="zh">换算</span></h3>
+      <p><span lang="en">Use <code>in</code>, <code>to</code>, <code>as</code> or <code>into</code>.</span>
+         <span lang="zh">用 <code>换</code>、<code>换算成</code>、<code>转成</code>，英文写 <code>in</code> / <code>to</code>。</span></p>
+      <div class="ex" lang="en">
+        <div class="row"><code>10 km in miles</code><span class="res">6.21 mi</span></div>
+        <div class="row"><code>1.5 TB in GB</code><span class="res">1,500 GB</span></div>
+        <div class="row"><code>1000 JPY to USD</code><span class="res">$6.52</span></div>
+        <div class="row"><code>25 celsius in fahrenheit</code><span class="res">77 °F</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>10 km 换 miles</code><span class="res">6.21 mi</span></div>
+        <div class="row"><code>1.5 TB 换 GB</code><span class="res">1,500 GB</span></div>
+        <div class="row"><code>1000 日元 换人民币</code><span class="res">¥46.52</span></div>
+        <div class="row"><code>25 摄氏度 换华氏度</code><span class="res">77 °F</span></div>
+      </div>
+      <p class="note">
+        <span lang="en">Exchange rates are fetched daily and cached. Everything else
+          (length, mass, data, time) is an exact definition and works offline.</span>
+        <span lang="zh">汇率每天取一次并缓存。其他的（长度、质量、数据、时间）
+          都是精确定义，离线一样算。</span>
+      </p>
+
+      <h3><span lang="en">Compound units</span><span lang="zh">复合单位</span></h3>
+      <p>
+        <span lang="en">Divide units to build rates, and they cancel the way they should.
+          Napkin cancels by dimension, not by name — so <code>users</code> against
+          <code>user</code> still cancels.</span>
+        <span lang="zh">用除号构造速率，该约掉的会约掉。
+          Napkin 按量纲约分而不是按名字，所以 <code>users</code> 和
+          <code>user</code> 也能对上。</span>
+      </p>
+      <div class="ex" lang="en">
+        <div class="row"><code>100 GB / 30 day</code><span class="res">3.33 GB/day</span></div>
+        <div class="row"><code>12,000 users/day × $39/user</code><span class="res">$468,000/day</span></div>
+        <div class="row"><code>1 GB / 1 day in MB/hour</code><span class="res">0.01 MB/h</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>100 GB / 30 day</code><span class="res">3.33 GB/天</span></div>
+        <div class="row"><code>12,000 users/day × ¥39/user</code><span class="res">¥468,000/天</span></div>
+        <div class="row"><code>1 GB / 1 day 换 MB/hour</code><span class="res">0.01 MB/h</span></div>
+      </div>
+
+      <h3><span lang="en">When units don't match</span><span lang="zh">单位对不上时</span></h3>
+      <div class="ex" lang="en">
+        <div class="row"><code>100 users + $50</code><span class="res err">can't add users and USD — different dimensions</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>100 users + ¥50</code><span class="res err">users 和 CNY 量纲不同，不能相加</span></div>
+      </div>
+
+      <h3><span lang="en">What it knows</span><span lang="zh">认得哪些单位</span></h3>
+      <table>
+        <tr><td><span lang="en">Money</span><span lang="zh">货币</span></td>
+            <td><code>$ ¥ € £</code> · <code>USD CNY EUR JPY</code> …</td></tr>
+        <tr><td><span lang="en">Counting</span><span lang="zh">计数</span></td>
+            <td><code>user users</code> · <code>order</code> · <code>time</code>
+                <span lang="zh"> · <code>人</code> · <code>次</code></span></td></tr>
+        <tr><td><span lang="en">Time</span><span lang="zh">时间</span></td>
+            <td><code>s min h day week month year</code>
+                <span lang="zh"> · <code>秒 分 时 天 周 月 年</code></span></td></tr>
+        <tr><td><span lang="en">Data</span><span lang="zh">数据</span></td>
+            <td><code>B KB MB GB TB</code> · <code>KiB MiB GiB</code></td></tr>
+        <tr><td><span lang="en">LLM</span><span lang="zh">大模型</span></td>
+            <td><code>token tokens</code> · <code>Mtok</code></td></tr>
+        <tr><td><span lang="en">Physical</span><span lang="zh">物理量</span></td>
+            <td><span lang="en">length, mass, temperature — <code>m km mi ft</code>, <code>g kg lb</code>, <code>°C °F</code></span>
+                <span lang="zh">长度、质量、温度 —— <code>米 公里 英里</code>、<code>克 千克 磅</code>、<code>摄氏度 华氏度</code></span></td></tr>
+      </table>
+    </section>
+
+    <!-- ══ 4 ══════════════════════════════ -->
+    <section id="pct">
+      <h2><span class="num">04</span><span lang="en">Percentages</span><span lang="zh">百分比</span></h2>
+      <p class="lead">
+        <span lang="en">"Up 12%" and "up 0.61 points" are different claims, and mixing them
+          up is how a deck ends up wrong. Napkin keeps them apart.</span>
+        <span lang="zh">「涨了 12%」和「涨了 0.61 个点」是两回事，混着说汇报就错了。
+          Napkin 把这两个分得很清楚。</span>
+      </p>
+      <div class="ex" lang="en">
+        <div class="row"><code>20% of $10</code><span class="res">$2.00</span></div>
+        <div class="row"><code>5% on $30</code><span class="res">$31.50</span></div>
+        <div class="row"><code>20% off 40 EUR</code><span class="res">€32.00</span></div>
+        <div class="row"><code>200 + 15%</code><span class="res">230</span></div>
+        <div class="row"><code>800 → 920</code><span class="res">+15%</span></div>
+        <div class="row"><code>5% + 0.61pp</code><span class="res">5.61%</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>800 的 12%</code><span class="res">96</span></div>
+        <div class="row"><code>5% on $30</code><span class="res">$31.50</span></div>
+        <div class="row"><code>6% off 40 EUR</code><span class="res">€37.60</span></div>
+        <div class="row"><code>200 + 15%</code><span class="res">230</span></div>
+        <div class="row"><code>800 → 920</code><span class="res">+15%</span></div>
+        <div class="row"><code>120 是 800 的百分之几</code><span class="res">15%</span></div>
+        <div class="row"><code>5% + 0.61pp</code><span class="res">5.61%</span></div>
+      </div>
+      <p class="note">
+        <span lang="en"><code>+ 15%</code> means <b>relative</b> (a 15% increase).
+          <code>+ 0.61pp</code> means <b>absolute</b> (add 0.61 percentage points).
+          Use <code>pp</code> whenever you mean points.</span>
+        <span lang="zh"><code>+ 15%</code> 是<b>相对</b>变化（涨 15%）。
+          <code>+ 0.61pp</code> 是<b>绝对</b>变化（加 0.61 个百分点）。
+          说「点」的时候一律写 <code>pp</code>。</span>
+      </p>
+    </section>
+
+    <!-- ══ 5 ══════════════════════════════ -->
+    <section id="vars">
+      <h2><span class="num">05</span><span lang="en">Variables</span><span lang="zh">变量</span></h2>
+      <p class="lead">
+        <span lang="en">Name your assumptions instead of scattering raw numbers.
+          Change one and everything below recomputes. Both <code>=</code> and
+          <code>:</code> work; names can be in any language.</span>
+        <span lang="zh">给假设起名字，别把裸数字撒得到处都是。改一个，下面全部重算。
+          <code>=</code> 和 <code>:</code> 都行，名字可以用中文。</span>
+      </p>
+      <div class="ex" lang="en">
+        <div class="row"><code>DAU = 12,000 users/day</code><span class="res">12,000 users/day</span></div>
+        <div class="row"><code>ARPU = $39/user</code><span class="res">$39/user</span></div>
+        <div class="row"><code>revenue: DAU × ARPU × 30 day</code><span class="res">$14,040,000.00</span></div>
+        <div class="row"><code>prev / 30 day</code><span class="res">$468,000/day</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>日活 = 12,000 users/day</code><span class="res">12,000 人/天</span></div>
+        <div class="row"><code>客单价 = ¥39/user</code><span class="res">¥39/人</span></div>
+        <div class="row"><code>月收入: 日活 × 客单价 × 30 day</code><span class="res">¥14,040,000.00</span></div>
+        <div class="row"><code>prev / 30 day</code><span class="res">¥468,000/天</span></div>
+      </div>
+      <table>
+        <tr><td><code>prev</code></td>
+            <td><span lang="en">The result of the line above</span><span lang="zh">上一行的结果</span></td></tr>
+        <tr><td><code>sum</code></td>
+            <td><span lang="en">Sum of the lines you have selected</span><span lang="zh">当前选中那几行的和</span></td></tr>
+        <tr><td><code>average</code></td>
+            <td><span lang="en">Average of the selected lines</span><span lang="zh">选中那几行的平均</span></td></tr>
+      </table>
+      <p class="note">
+        <span lang="en">Select a few lines and the total appears at the bottom — no need to
+          write <code>sum</code> at all. There is deliberately no whole-document total:
+          most drafts have several unrelated calculations in them, and summing all of
+          them produces a meaningless number.</span>
+        <span lang="zh">选中几行，底部直接出合计，连 <code>sum</code> 都不用写。
+          刻意不做全文档合计——一张草稿上通常有好几段互不相干的账，
+          全加起来是个没有意义的数。</span>
+      </p>
+    </section>
+
+    <!-- ══ 6 ══════════════════════════════ -->
+    <section id="dates">
+      <h2><span class="num">06</span><span lang="en">Dates &amp; time</span><span lang="zh">日期与时间</span></h2>
+      <div class="ex" lang="en">
+        <div class="row"><code>today + 45 days</code><span class="res">2026-09-04</span></div>
+        <div class="row"><code>today + 10 workdays</code><span class="res">2026-08-04</span></div>
+        <div class="row"><code>2026-09-01 − today</code><span class="res">42 days</span></div>
+        <div class="row"><code>2h 30min + 45min</code><span class="res">3h 15min</span></div>
+        <div class="row"><code>fromunix(1784505600)</code><span class="res">2026-07-20 00:00 UTC</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>今天 + 45 天</code><span class="res">2026-09-04</span></div>
+        <div class="row"><code>今天 + 10 个工作日</code><span class="res">2026-08-04</span></div>
+        <div class="row"><code>2026-09-01 − 今天</code><span class="res">42 天</span></div>
+        <div class="row"><code>2h 30min + 45min</code><span class="res">3h 15min</span></div>
+        <div class="row"><code>本月还剩几天</code><span class="res">10 天</span></div>
+      </div>
+      <p>
+        <span lang="en">Month and year arithmetic is calendar-aware: adding one month to
+          Jan 31 lands on Feb 28, not Mar 3. Time zones work too —
+          <code>now in PST</code>.</span>
+        <span lang="zh">月和年的加减按日历走：1 月 31 日加一个月落在 2 月 28 日，
+          而不是 3 月 3 日。时区也认，写 <code>now in PST</code> 或 <code>北京时间</code>。</span>
+      </p>
+    </section>
+
+    <!-- ══ 7 ══════════════════════════════ -->
+    <section id="ab">
+      <h2><span class="num">07</span><span lang="en">A/B testing</span><span lang="zh">A/B 实验</span></h2>
+      <p class="lead">
+        <span lang="en">Give it the two arms and it runs a two-proportion z-test:
+          the lift, the p-value, and a straight verdict on whether the difference
+          could just be noise.</span>
+        <span lang="zh">给它两组数据，它跑双比例 z 检验：提升幅度、p 值，
+          以及一个直接的结论——这个差异是不是可能纯属噪声。</span>
+      </p>
+      <div class="ex" lang="en">
+        <div class="row"><code>abtest(4820, 116, 4790, 144)</code><span class="res">+24.92% / p=0.0701 ✗ not significant</span></div>
+        <div class="row"><code>A: 4820, 116</code><span class="res dim">—</span></div>
+        <div class="row"><code>B: 4790, 144</code><span class="res">+24.92% / p=0.0701 ✗ not significant</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>abtest(4820, 116, 4790, 144)</code><span class="res">+24.92% / p=0.0701 ✗ 不显著</span></div>
+        <div class="row"><code>A: 4820 中 116</code><span class="res dim">—</span></div>
+        <div class="row"><code>B: 4790 中 144</code><span class="res">+24.92% / p=0.0701 ✗ 不显著</span></div>
+      </div>
+      <p>
+        <span lang="en">Arguments are <code>exposures A, conversions A, exposures B, conversions B</code>.
+          The <code>A:</code> line stays silent by design — the comparison only exists once
+          there's a second arm.</span>
+        <span lang="zh">参数顺序是 <code>曝光A, 转化A, 曝光B, 转化B</code>。
+          <code>A:</code> 那行故意不出结果——有了第二组才谈得上比较。</span>
+      </p>
+
+      <h3><span lang="en">Planning a test</span><span lang="zh">开跑之前</span></h3>
+      <div class="ex" lang="en">
+        <div class="row"><code>samplesize(2.4%, 10%)</code><span class="res">66,944 per arm (133,888 total)</span></div>
+        <div class="row"><code>mde(2.4%, 5000)</code><span class="res">+38.9%</span></div>
+        <div class="row"><code>samplesize(2.4%, 10%) users / (12k users/day)</code><span class="res">11.2 day</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>样本量(基线 2.4%, 提升 10%)</code><span class="res">每组 66,944（共 133,888）</span></div>
+        <div class="row"><code>mde(基线 2.4%, 每组 5000)</code><span class="res">+38.9%</span></div>
+        <div class="row"><code>样本量(2.4%, 10%) users / (12k users/day)</code><span class="res">11.2 天</span></div>
+      </div>
+      <p>
+        <span lang="en"><code>samplesize</code> answers "how many do I need?";
+          <code>mde</code> answers the reverse — "with the traffic I have, how big does the
+          effect need to be before I could detect it?" Both assume 80% power and α = 0.05.
+          Note the parentheses in the division — without them <code>users/day</code> isn't
+          treated as one unit.</span>
+        <span lang="zh"><code>样本量</code> 回答「我需要多少人」；<code>mde</code> 回答反过来的问题
+          ——「就这么点流量，效果得多大我才看得出来」。两者都按 80% 功效、α = 0.05 算。
+          除法要加括号：<code>/ (12k users/day)</code>，不加的话 <code>users/day</code> 不会当成一个整体。</span>
+      </p>
+      <p class="note">
+        <span lang="en"><b>Two-tailed only.</b> One-tailed tests halve the p-value and are the
+          most common way an experiment gets talked into looking significant. Napkin
+          doesn't offer them.</span>
+        <span lang="zh"><b>只做双尾。</b>单尾把 p 值砍一半，是把实验「说成」显著的最常见入口。
+          Napkin 不提供这个选项。</span>
+      </p>
+    </section>
+
+    <!-- ══ 8 ══════════════════════════════ -->
+    <section id="uncert">
+      <h2><span class="num">08</span><span lang="en">Uncertainty</span><span lang="zh">区间估算</span></h2>
+      <p class="lead">
+        <span lang="en">You rarely know ARPU exactly. Write the range with <code>±</code>
+          (or <code>+-</code>) and Napkin carries it all the way down, so the final
+          number admits how rough it is.</span>
+        <span lang="zh">客单价你从来就不知道确切值。用 <code>±</code>（或 <code>+-</code>）
+          写下浮动范围，Napkin 会一路带到底，最后那个数会老实告诉你它有多粗。</span>
+      </p>
+      <div class="ex" lang="en">
+        <div class="row"><code>ARPU = 39 $/user ± 15%</code><span class="res">$39/user ± 15%</span></div>
+        <div class="row"><code>DAU = 12k users/day</code><span class="res">12,000 users/day</span></div>
+        <div class="row"><code>DAU × ARPU × 30 day</code><span class="res">$14,040,000.00 ± 2,106,000</span></div>
+      </div>
+      <div class="ex" lang="zh">
+        <div class="row"><code>客单价 = 39 ¥/user ± 15%</code><span class="res">¥39/人 ± 15%</span></div>
+        <div class="row"><code>日活 = 12k users/day</code><span class="res">12,000 人/天</span></div>
+        <div class="row"><code>日活 × 客单价 × 30 day</code><span class="res">¥14,040,000.00 ± 2,106,000</span></div>
+      </div>
+      <p>
+        <span lang="en">Errors combine as root-sum-square, not by adding up. Adding them
+          linearly assumes every assumption is wrong in the same direction at once,
+          which explodes the range as soon as you have more than two or three variables.</span>
+        <span lang="zh">误差按平方和开根合成，而不是直接相加。
+          线性相加等于假设所有假设同时朝一个方向错，
+          变量一多，区间就炸得没法看了。</span>
+      </p>
+      <p class="note">
+        <span lang="en"><b>Write the unit on the number, before the <code>±</code>.</b>
+          <code>39 $/user ± 15%</code> works; <code>39 ± 15% $/user</code> does not
+          parse the way you'd expect.</span>
+        <span lang="zh"><b>单位要写在数字上，写在 <code>±</code> 前面。</b>
+          <code>39 ¥/user ± 15%</code> 可以；<code>39 ± 15% ¥/user</code> 解析结果和你想的不一样。</span>
+      </p>
+    </section>
+
+    <!-- ══ 9 ══════════════════════════════ -->
+    <section id="keys">
+      <h2><span class="num">09</span><span lang="en">Shortcuts</span><span lang="zh">快捷键</span></h2>
+      <table>
+        <tr><td><kbd>⌥</kbd><kbd>Space</kbd></td>
+            <td><span lang="en">Show or hide Napkin, from anywhere</span><span lang="zh">在任何地方呼出或收起</span></td></tr>
+        <tr><td><kbd>⌥</kbd><kbd>⇧</kbd><kbd>Space</kbd></td>
+            <td><span lang="en">Open a fresh draft</span><span lang="zh">新建一张草稿</span></td></tr>
+        <tr><td><kbd>Esc</kbd></td>
+            <td><span lang="en">Put it away, return focus</span><span lang="zh">收起，焦点还给刚才那个 App</span></td></tr>
+        <tr><td><kbd>⌘</kbd><kbd>T</kbd></td>
+            <td><span lang="en">New tab</span><span lang="zh">新标签页</span></td></tr>
+        <tr><td><kbd>⌘</kbd><kbd>W</kbd></td>
+            <td><span lang="en">Close tab</span><span lang="zh">关闭标签页</span></td></tr>
+        <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>C</kbd></td>
+            <td><span lang="en">Copy the current line's result</span><span lang="zh">复制当前行的结果</span></td></tr>
+        <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>A</kbd></td>
+            <td><span lang="en">Copy the whole draft, results aligned</span><span lang="zh">复制整份草稿，算式与结果对齐</span></td></tr>
+        <tr><td><kbd>⌘</kbd><kbd>⇧</kbd><kbd>M</kbd></td>
+            <td><span lang="en">Copy as a Markdown table</span><span lang="zh">复制成 Markdown 表格</span></td></tr>
+        <tr><td><kbd>⌘</kbd><kbd>,</kbd></td>
+            <td><span lang="en">Settings</span><span lang="zh">设置</span></td></tr>
+      </table>
+    </section>
+
+    <!-- ══ 10 ═════════════════════════════ -->
+    <section id="limits">
+      <h2><span class="num">10</span><span lang="en">Known limits</span><span lang="zh">已知限制</span></h2>
+      <p class="lead">
+        <span lang="en">Things Napkin currently gets wrong or doesn't do. Listed here
+          rather than left for you to discover mid-calculation.</span>
+        <span lang="zh">Napkin 目前做不到或者会做错的地方。写在这里，
+          省得你算到一半才发现。</span>
+      </p>
+      <table>
+        <tr><td><code>39 ± 15% $/user</code></td>
+            <td><span lang="en">Unit after the <code>±</code> is misread. Write <code>39 $/user ± 15%</code></span>
+                <span lang="zh">单位写在 <code>±</code> 后面会解析错。写成 <code>39 ¥/user ± 15%</code></span></td></tr>
+        <tr><td><code>± 0.5pp</code></td>
+            <td><span lang="en">The <code>pp</code> suffix is dropped inside <code>±</code> — it reads as ±0.5, not ±0.5 points. Use <code>± 0.5%</code></span>
+                <span lang="zh"><code>±</code> 里的 <code>pp</code> 会被丢掉，当成 ±0.5 而不是 0.5 个点。写 <code>± 0.5%</code></span></td></tr>
+        <tr><td><span lang="en">Solving for a variable</span><span lang="zh">反解变量</span></td>
+            <td><span lang="en">Only simple cases. There's no general equation solver yet</span>
+                <span lang="zh">只支持简单情形，还没有通用方程求解</span></td></tr>
+        <tr><td><span lang="en">Line references</span><span lang="zh">行号引用</span></td>
+            <td><span lang="en">Absolute references shift when you insert a line above. Use named variables</span>
+                <span lang="zh">在上方插入一行，绝对引用就错位了。用变量名代替</span></td></tr>
+        <tr><td><span lang="en">Model price tables</span><span lang="zh">模型价格表</span></td>
+            <td><span lang="en">Not built in, on purpose — a stale price table is worse than no table</span>
+                <span lang="zh">刻意不内置——过期的价格表比没有更危险</span></td></tr>
+        <tr><td><span lang="en">Windows / Linux</span><span lang="zh">Windows / Linux</span></td>
+            <td><span lang="en">macOS only for now. The engine is portable; the app shell isn't yet</span>
+                <span lang="zh">目前只有 macOS。引擎是跨平台的，壳还不是</span></td></tr>
+      </table>
+      <p>
+        <span lang="en">Found something else? <a href="https://github.com/casperkwok/napkin-app/issues">Open an issue.</a></span>
+        <span lang="zh">发现别的问题？<a href="https://github.com/casperkwok/napkin-app/issues">提个 issue</a>。</span>
+      </p>
+    </section>
+  </article>
+</div>
+
+<div class="wrap">
+  <footer>
+    <span lang="en">Napkin · Napkin math, done right</span>
+    <span lang="zh">Napkin · 算得懂业务账的计算器</span>
+    <span><a href="./"><span lang="en">Home</span><span lang="zh">首页</span></a></span>
+  </footer>
+</div>
+
+<script src="lang.js"></script>

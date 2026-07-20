@@ -1,92 +1,38 @@
-<title>Napkin — 估算也要算对</title>
-<meta name="description" content="给做收入和增长的人用的估算草稿纸。懂业务单位，会算显著性，误差自动传播。macOS 应用。">
+<meta charset="utf-8">
+<title>Napkin — A calculator that understands your business</title>
+<span hidden
+  data-title-en="Napkin — A calculator that understands your business"
+  data-title-zh="Napkin — 一个算得懂业务账的计算器"></span>
+<meta name="description" content="Estimate revenue, price out AI features, read A/B results. A macOS calculator that understands business units, runs the significance test, and carries your error bars to the bottom line.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta property="og:title" content="Napkin — 估算也要算对">
-<meta property="og:description" content="给做收入和增长的人用的估算草稿纸。">
+<meta property="og:title" content="Napkin — A calculator that understands your business">
+<meta property="og:description" content="Estimate revenue, price out AI features, read A/B results — one line in, one answer out.">
+<link rel="stylesheet" href="base.css">
+<script>
+  /* 必须在渲染前定语言，否则会闪一帧英文再跳中文 */
+  (function(){var l;try{l=localStorage.getItem('napkin-lang')}catch(e){}
+   document.documentElement.setAttribute('data-lang', l||'en');})();
+</script>
 
 <style>
-  :root {
-    --ink: #1d1d1f;
-    --gray: #6e6e73;
-    --gray-2: #86868b;
-    --hair: #d2d2d7;
-    --bg: #ffffff;
-    --bg-2: #f5f5f7;
-    --amber: #c9832b;
-    --green: #117a44;
-    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
-            "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, monospace;
-  }
-
-  * { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.5;
-  }
-
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 22px; }
-
-  /* ── 顶栏 ─────────────────────────────── */
-  nav {
-    position: sticky; top: 0; z-index: 20;
-    background: rgba(255,255,255,.82);
-    backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid rgba(0,0,0,.08);
-  }
-  nav .wrap {
-    height: 48px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; }
-
-  /* app icon 的复刻：不等长的等号，下杠琥珀 */
-  .mark { width: 22px; height: 22px; border-radius: 6px; background: #1d1d1f; position: relative; flex: none; }
-  .mark::before, .mark::after {
-    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
-    height: 2.5px; border-radius: 2px;
-  }
-  .mark::before { top: 7px;  width: 8px;  background: #f5f1e8; }
-  .mark::after  { top: 12.5px; width: 12px; background: #d9a441; }
-
-  nav a { color: var(--gray); text-decoration: none; font-size: 13px; margin-left: 22px; }
-  nav a:hover { color: var(--ink); }
-
   /* ── 主张：左文右图 ───────────────────── */
-  .hero {
-    display: grid;
-    gap: 40px;
-    align-items: center;
-    padding: 64px 0 72px;
-  }
+  .hero { display: grid; gap: 40px; align-items: center; padding: 64px 0 72px; }
   @media (min-width: 900px) {
     .hero {
       grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-      gap: 56px;
-      padding: 84px 0 96px;
+      gap: 56px; padding: 84px 0 96px;
     }
   }
 
   h1 {
     font-size: clamp(38px, 5vw, 54px);
-    line-height: 1.08;
-    letter-spacing: -0.028em;
-    font-weight: 700;
-    margin: 0 0 18px;
+    line-height: 1.08; letter-spacing: -0.028em;
+    font-weight: 700; margin: 0 0 18px;
   }
 
   .lede {
-    font-size: clamp(16px, 1.7vw, 18.5px);
-    line-height: 1.5;
-    color: var(--gray);
-    margin: 0 0 28px;
+    font-size: clamp(16px, 1.7vw, 18.5px); line-height: 1.5;
+    color: var(--gray); margin: 0 0 28px;
   }
   .lede b { color: var(--ink); font-weight: 600; }
 
@@ -112,7 +58,6 @@
     box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 22px 60px rgba(0,0,0,.24);
   }
   .caption { color: var(--gray-2); font-size: 12.5px; margin: 14px 2px 0; }
-  /* 窄屏时截图回到文字下方，且不必贴边 */
   @media (max-width: 899px) { .caption { text-align: center; } }
 
   /* ── 三件事 ───────────────────────────── */
@@ -128,13 +73,8 @@
   .grid { display: grid; gap: 20px; }
   @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 
-  .card {
-    background: #fff; border-radius: 16px; padding: 26px 24px 24px;
-  }
-  .card h3 {
-    font-size: 17px; font-weight: 620; letter-spacing: -0.01em;
-    margin: 0 0 9px;
-  }
+  .card { background: #fff; border-radius: 16px; padding: 26px 24px 24px; }
+  .card h3 { font-size: 17px; font-weight: 620; letter-spacing: -0.01em; margin: 0 0 9px; }
   .card p { color: var(--gray); font-size: 14.5px; margin: 0 0 18px; line-height: 1.55; }
 
   .snip {
@@ -146,17 +86,15 @@
   .snip .g { color: #4ade80; }
   .snip .r { color: #ff8a80; }
   .snip .a { color: #e39a3c; }
-  .snip .d { color: #86868b; }
 
   /* ── 更多能力 ─────────────────────────── */
   .more { padding: 76px 0 20px; }
   .rows { border-top: 1px solid var(--hair); }
   .rowline {
     display: grid; gap: 6px 28px;
-    padding: 20px 2px;
-    border-bottom: 1px solid var(--hair);
+    padding: 20px 2px; border-bottom: 1px solid var(--hair);
   }
-  @media (min-width: 700px) { .rowline { grid-template-columns: 210px 1fr; } }
+  @media (min-width: 700px) { .rowline { grid-template-columns: 230px 1fr; } }
   .rowline dt { font-weight: 600; font-size: 15px; }
   .rowline dd { margin: 0; color: var(--gray); font-size: 14.5px; }
   .rowline code {
@@ -168,78 +106,114 @@
   /* ── 结尾 ─────────────────────────────── */
   .end { text-align: center; padding: 80px 0 90px; }
   .end h2 { margin-bottom: 22px; }
-
-  footer {
-    border-top: 1px solid var(--hair);
-    padding: 22px 0 40px;
-    color: var(--gray-2); font-size: 12.5px;
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-  }
-  footer a { color: var(--gray-2); }
+  footer { margin-top: 0; }
 
   a:focus-visible, .btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 </style>
 
 <nav>
   <div class="wrap">
-    <span class="brand"><span class="mark"></span>Napkin</span>
-    <span>
-      <a href="#why">为什么不一样</a>
-      <a href="#more">能力</a>
-      <a href="https://github.com/casperkwok/napkin-app/releases">下载</a>
+    <a class="brand" href="./"><span class="mark"></span>Napkin</a>
+    <span class="navlinks">
+      <a href="#why"><span lang="en">What it catches</span><span lang="zh">拦下什么错</span></a>
+      <a href="#more"><span lang="en">Features</span><span lang="zh">能做什么</span></a>
+      <a href="help.html"><span lang="en">Help</span><span lang="zh">帮助</span></a>
+      <a href="https://github.com/casperkwok/napkin-app/releases"><span lang="en">Download</span><span lang="zh">下载</span></a>
+      <span class="langtoggle">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="zh">中</button>
+      </span>
     </span>
   </div>
 </nav>
 
 <div class="wrap hero">
   <div>
-    <h1>估算也要算对</h1>
+    <h1><span lang="en">A calculator that<br>understands your business</span><span lang="zh">一个算得懂<br>业务账的计算器</span></h1>
     <p class="lede">
-      给做收入和增长的人用的草稿纸。它知道<b>「人」不能加「元」</b>，
-      知道<b>涨了 24% 也可能不显著</b>，也知道你的假设本来就是个大概。
+      <span lang="en">Estimate revenue, price out an AI feature, read an A/B result —
+        <b>one line in, one answer out</b>. It knows what <code>users/day</code> and
+        <code>$/user</code> mean, runs the significance test for you, and carries your
+        error bars all the way to the bottom line.</span>
+      <span lang="zh">估收入、算 AI 成本、看 A/B 实验结果——<b>写一行，右边出一个答案</b>。
+        它认识「人/天」「元/人」这些业务单位，会自己算显著性，
+        也会把你的误差范围一路带到结论。</span>
     </p>
     <div class="cta">
       <a class="btn" href="https://github.com/casperkwok/napkin-app/releases/latest/download/Napkin.dmg">
-        下载 macOS 版
+        <span lang="en">Download for macOS</span><span lang="zh">下载 macOS 版</span>
       </a>
-      <a class="btn ghost" href="#why">看它怎么算</a>
+      <a class="btn ghost" href="#why"><span lang="en">What it catches</span><span lang="zh">它能拦下什么错</span></a>
     </div>
-    <p class="fineprint">macOS 14 或更新版本 · 已签名公证 · 1.7 MB</p>
+    <p class="fineprint">
+      <span lang="en">macOS 14 or later · Signed and notarized · 1.7 MB</span>
+      <span lang="zh">macOS 14 或更新版本 · 已签名公证 · 1.7 MB</span>
+    </p>
   </div>
 
   <div class="shot">
-    <img src="img/shot-dark.png" alt="Napkin 界面：左侧算式，右侧结果。含单位推导、A/B 显著性与量纲错误提示。" width="1440" height="1000">
-    <p class="caption">⌥Space 随时呼出，Esc 收起，焦点还给刚才那个 App</p>
+    <img src="img/shot-dark.png" width="1440" height="1000"
+      alt="Napkin: expressions on the left, results on the right, with unit derivation and A/B significance.">
+    <p class="caption">
+      <span lang="en"><kbd>⌥</kbd><kbd>Space</kbd> to call it up, <kbd>Esc</kbd> to put it away — focus goes back to where you were</span>
+      <span lang="zh"><kbd>⌥</kbd><kbd>Space</kbd> 呼出，<kbd>Esc</kbd> 收起——焦点回到你刚才那个窗口</span>
+    </p>
   </div>
 </div>
 
 <section class="band" id="why">
   <div class="wrap">
-    <h2>三件别的计算器不做的事</h2>
-    <p class="sub">不是功能更多，是少给你几个错的答案。</p>
+    <h2><span lang="en">Three mistakes it catches</span><span lang="zh">它会拦下三种错</span></h2>
+    <p class="sub">
+      <span lang="en">Every other calculator lets all three through without a word.</span>
+      <span lang="zh">这三种错，Excel 和普通计算器都会安静地放过去。</span>
+    </p>
     <div class="grid">
 
       <div class="card">
-        <h3>单位不对就不给答案</h3>
-        <p>把人数和金额加在一起，多数工具会安静地给你一个数。那个数会被写进汇报。</p>
-        <div class="snip">100 users + ¥50
+        <h3><span lang="en">Adding headcount to money</span><span lang="zh">把人数和金额加在一起</span></h3>
+        <p>
+          <span lang="en">Excel hands you 150, and that number ends up in a deck.
+            Napkin refuses, and tells you what the two units actually were.</span>
+          <span lang="zh">Excel 会给你 150，然后这个数被写进汇报。Napkin 直接拒绝，
+            并告诉你两边的单位分别是什么。</span>
+        </p>
+        <div class="snip" lang="en">100 users + $50
+<span class="r">can't add users and USD — different units</span></div>
+        <div class="snip" lang="zh">100 users + ¥50
 <span class="r">users 和 CNY 量纲不同，不能相加</span></div>
       </div>
 
       <div class="card">
-        <h3>涨了不等于赢了</h3>
-        <p>提升 24% 看着很香。但样本不够时那可能只是噪声——置信区间跨过了零。</p>
-        <div class="snip">A: 1000 曝光 / 50 转化
-B: 1000 曝光 / 62 转化
-<span class="g">+24.00%</span> · p=0.243 <span class="r">✗ 不显著</span></div>
+        <h3><span lang="en">Mistaking noise for growth</span><span lang="zh">把噪声当成了增长</span></h3>
+        <p>
+          <span lang="en">Conversion is up 24% — looks shippable. But at a thousand
+            users per arm there's a 24% chance it's luck. Napkin just says not significant.</span>
+          <span lang="zh">新版转化率高了 24%，看着该上线了。但每组只有一千人，
+            这个差异有 24% 的概率纯属偶然。Napkin 会直接说「不显著」。</span>
+        </p>
+        <div class="snip" lang="en">A: 1000, 50
+B: 1000, 62
+<span class="g">+24.00%</span> · p=0.2432 <span class="r">✗ not significant</span></div>
+        <div class="snip" lang="zh">A: 1000 中 50
+B: 1000 中 62
+<span class="g">+24.00%</span> · p=0.2432 <span class="r">✗ 不显著</span></div>
       </div>
 
       <div class="card">
-        <h3>假设是大概，答案也该是</h3>
-        <p>你从不知道客单价确切是多少。写下浮动范围，误差会一路传播到结论。</p>
-        <div class="snip">客单价 = 39 ¥/user <span class="a">± 15%</span>
-月收入 = 日活 × 转化率 × 客单价 × 30 day
-<span class="g">¥336,960 ± 50,544</span></div>
+        <h3><span lang="en">Treating a guess as a fact</span><span lang="zh">把猜的数当成了准的数</span></h3>
+        <p>
+          <span lang="en">ARPU is "about 39". Somehow the monthly revenue comes out to
+            the cent. Write the range and Napkin tells you how far off it can be.</span>
+          <span lang="zh">客单价「大概 39 块」，算出来的月收入却精确到分。
+            写下浮动范围，Napkin 会告诉你结论能差多少。</span>
+        </p>
+        <div class="snip" lang="en">ARPU = 39 $/user <span class="a">± 15%</span>
+DAU × ARPU × 30 day
+<span class="g">$14,040,000 ± 2,106,000</span></div>
+        <div class="snip" lang="zh">客单价 = 39 ¥/user <span class="a">± 15%</span>
+日活 × 客单价 × 30 day
+<span class="g">¥14,040,000 ± 2,106,000</span></div>
       </div>
 
     </div>
@@ -247,61 +221,114 @@ B: 1000 曝光 / 62 转化
 </section>
 
 <section class="wrap more" id="more">
-  <h2>还会这些</h2>
-  <p class="sub">都是做收入的人每天真会用到的。</p>
+  <h2><span lang="en">Everything you'd reach for</span><span lang="zh">常用的都在</span></h2>
+  <p class="sub">
+    <span lang="en">Left is what you type. Right is what it computes.</span>
+    <span lang="zh">左边是你写的，右边是它算的。</span>
+  </p>
   <dl class="rows">
 
     <div class="rowline">
-      <dt>业务量纲推导</dt>
-      <dd><code>users/day × ¥/user × day</code> 自动得出 <code>¥</code>，中文界面下显示成 <code>人/天</code>。单位跟着算式走，不用自己盯。</dd>
+      <dt><span lang="en">Units follow the math</span><span lang="zh">单位自己跟着算</span></dt>
+      <dd>
+        <span lang="en">Write <code>DAU × ARPU × 30 day</code> and it knows the answer is
+          money, not headcount. Units carry through the whole expression on their own.</span>
+        <span lang="zh">写 <code>日活 × 客单价 × 30 day</code>，它知道结果是钱，不是人数。
+          单位跟着算式一路推导，不用自己盯。</span>
+      </dd>
     </div>
 
     <div class="rowline">
-      <dt>LLM token 成本</dt>
-      <dd><code>2k tokens/user × $3/Mtok</code> 直接得到每用户成本。不内置价格表——那种表过期比没有更危险。</dd>
+      <dt><span lang="en">What an AI feature will cost</span><span lang="zh">算 AI 功能要烧多少钱</span></dt>
+      <dd>
+        <span lang="en"><code>2k tokens/user × $3/Mtok</code> gives cost per user; multiply by
+          DAU for the monthly bill. You supply the price — a built-in table would go stale,
+          and a stale price table is worse than none.</span>
+        <span lang="zh"><code>2k tokens/user × $3/Mtok</code> 得到每用户成本，再乘日活就是月账单。
+          模型价格自己填——内置的价格表过期比没有更危险。</span>
+      </dd>
     </div>
 
     <div class="rowline">
-      <dt>实验要跑多久</dt>
-      <dd><code>样本量(基线 2.4%, 提升 10%) users / 日活</code> → <code>11.2 天</code>。统计和量纲一起算。</dd>
+      <dt><span lang="en">How long the test has to run</span><span lang="zh">这个实验要跑几天</span></dt>
+      <dd>
+        <span lang="en">Sample size for the lift you care about, divided by daily traffic:
+          <code>samplesize(2.4%, 10%) users / (12k users/day)</code> → <code>11.2 day</code></span>
+        <span lang="zh">检出目标提升需要多少样本，除以日活就是天数：
+          <code>样本量(2.4%, 10%) users / (12k users/day)</code> → <code>11.2 天</code></span>
+      </dd>
     </div>
 
     <div class="rowline">
-      <dt>百分点还是相对变化</dt>
-      <dd><code>5% → 5.61%</code> 同时给 <code>+0.61pp</code> 和 <code>+12.2%</code>。这两个数在汇报里是完全不同的故事。</dd>
+      <dt><span lang="en">Points versus percent</span><span lang="zh">涨了 0.61 个点还是涨了 12%</span></dt>
+      <dd>
+        <span lang="en">Conversion from 5% to 5.61% is both "+0.61 points" and "+12%".
+          <code>5% → 5.61%</code> gives you both, so you don't quote the wrong one.</span>
+        <span lang="zh">转化率从 5% 到 5.61%，两种说法都对但差别很大。
+          <code>5% → 5.61%</code> 两个数一起给，汇报时不会说错。</span>
+      </dd>
     </div>
 
     <div class="rowline">
-      <dt>命名变量</dt>
-      <dd>写 <code>月收入 = 日活 × 客单价 × 30</code>，改一个假设整段重算。三天后回来还看得懂。</dd>
+      <dt><span lang="en">Name your assumptions</span><span lang="zh">给数字起名字</span></dt>
+      <dd>
+        <span lang="en">Write <code>revenue = DAU × ARPU × 30</code> instead of
+          <code>12000×39×30</code>. Change one assumption and the rest recomputes —
+          and it still makes sense three days later.</span>
+        <span lang="zh">写 <code>月收入 = 日活 × 客单价 × 30</code> 而不是 <code>12000×39×30</code>。
+          改一个假设整段自动重算，三天后回来还看得懂。</span>
+      </dd>
     </div>
 
     <div class="rowline">
-      <dt>算完带得走</dt>
-      <dd>⌘⇧A 复制整份草稿，算式与结果对齐；⌘⇧M 复制为 Markdown。</dd>
+      <dt><span lang="en">Paste it somewhere else</span><span lang="zh">算完贴给别人看</span></dt>
+      <dd>
+        <span lang="en"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>A</kbd> copies the whole draft with results
+          aligned; <kbd>⌘</kbd><kbd>⇧</kbd><kbd>M</kbd> copies it as a Markdown table.</span>
+        <span lang="zh"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>A</kbd> 复制整份草稿，算式和结果对齐排好；
+          <kbd>⌘</kbd><kbd>⇧</kbd><kbd>M</kbd> 复制成 Markdown 表格。</span>
+      </dd>
     </div>
 
     <div class="rowline">
-      <dt>钱不会算错</dt>
-      <dd>定点十进制，<code>0.1 + 0.2</code> 就是 <code>0.3</code>。多数计算器在这里会给你 <code>0.30000000000000004</code>。</dd>
+      <dt><span lang="en">Money that adds up</span><span lang="zh">钱算到分不出错</span></dt>
+      <dd>
+        <span lang="en"><code>0.1 + 0.2</code> is <code>0.3</code>. Most calculators give you
+          <code>0.30000000000000004</code> — floating point and money don't mix.</span>
+        <span lang="zh"><code>0.1 + 0.2</code> 就是 <code>0.3</code>。多数计算器在这里会给你
+          <code>0.30000000000000004</code>——用浮点数算钱迟早出事。</span>
+      </dd>
     </div>
 
   </dl>
+  <p class="sub" style="margin-top:38px">
+    <span lang="en"><a href="help.html">Full syntax reference →</a></span>
+    <span lang="zh"><a href="help.html">完整语法参考 →</a></span>
+  </p>
 </section>
 
 <section class="wrap end">
-  <h2>下一次估算，试试这个</h2>
+  <h2><span lang="en">Next estimate, skip the spreadsheet</span><span lang="zh">下次估收入，别开 Excel 了</span></h2>
   <div class="cta">
     <a class="btn" href="https://github.com/casperkwok/napkin-app/releases/latest/download/Napkin.dmg">
-      下载 macOS 版
+      <span lang="en">Download for macOS</span><span lang="zh">下载 macOS 版</span>
     </a>
   </div>
-  <p class="fineprint">macOS 14 或更新版本 · 已签名公证</p>
+  <p class="fineprint">
+    <span lang="en">macOS 14 or later · Signed and notarized</span>
+    <span lang="zh">macOS 14 或更新版本 · 已签名公证</span>
+  </p>
 </section>
 
 <div class="wrap">
   <footer>
-    <span>Napkin · 一份算得对的草稿纸</span>
-    <span><a href="https://github.com/casperkwok/napkin-app/releases">历史版本</a></span>
+    <span lang="en">Napkin · Napkin math, done right</span>
+    <span lang="zh">Napkin · 算得懂业务账的计算器</span>
+    <span>
+      <a href="help.html"><span lang="en">Help</span><span lang="zh">帮助</span></a> ·
+      <a href="https://github.com/casperkwok/napkin-app/releases"><span lang="en">Releases</span><span lang="zh">历史版本</span></a>
+    </span>
   </footer>
 </div>
+
+<script src="lang.js"></script>
