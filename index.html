@@ -1,308 +1,293 @@
 <title>Napkin — 估算也要算对</title>
-<meta name="description" content="给做收入和增长的人用的估算草稿纸。懂业务单位，会算显著性，误差自动传播。">
+<meta name="description" content="给做收入和增长的人用的估算草稿纸。懂业务单位，会算显著性，误差自动传播。macOS 应用。">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Napkin — 估算也要算对">
+<meta property="og:description" content="给做收入和增长的人用的估算草稿纸。">
 
 <style>
   :root {
-    --ink: #18181b;
-    --ink-soft: #232327;
-    --paper: #f5f1e8;
-    --paper-dim: #cfc9bb;
-    --result: #4ade80;
-    --result-deep: #119452;
-    --amber: #d9a441;
-    --muted: #8b8b93;
-    --rule: #2e2e33;
-
-    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-            "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    --ink: #1d1d1f;
+    --gray: #6e6e73;
+    --gray-2: #86868b;
+    --hair: #d2d2d7;
+    --bg: #ffffff;
+    --bg-2: #f5f5f7;
+    --amber: #c9832b;
+    --green: #117a44;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+            "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
   }
 
   * { box-sizing: border-box; }
 
+  html { scroll-behavior: smooth; }
+
   body {
     margin: 0;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--bg);
+    color: var(--ink);
     font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
-  .wrap { max-width: 940px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 22px; }
 
-  /* ── 顶栏 ───────────────────────────────── */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 22px 0;
+  /* ── 顶栏 ─────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,.82);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,.08);
   }
-
-  .brand { display: flex; align-items: center; gap: 10px; }
-
-  /* 图标是 app icon 的直接复刻：不等长的等号，下杠琥珀 */
-  .mark {
-    width: 26px; height: 26px;
-    border-radius: 7px;
-    background: var(--ink-soft);
-    position: relative;
-    flex: none;
+  nav .wrap {
+    height: 48px;
+    display: flex; align-items: center; justify-content: space-between;
   }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; }
+
+  /* app icon 的复刻：不等长的等号，下杠琥珀 */
+  .mark { width: 22px; height: 22px; border-radius: 6px; background: #1d1d1f; position: relative; flex: none; }
   .mark::before, .mark::after {
-    content: ""; position: absolute; left: 50%;
-    height: 3px; border-radius: 2px;
-    transform: translateX(-50%);
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    height: 2.5px; border-radius: 2px;
   }
-  .mark::before { top: 8px;  width: 9px;  background: var(--paper); }
-  .mark::after  { top: 15px; width: 13px; background: var(--amber); }
+  .mark::before { top: 7px;  width: 8px;  background: #f5f1e8; }
+  .mark::after  { top: 12.5px; width: 12px; background: #d9a441; }
 
-  .brand span { font-weight: 600; letter-spacing: -0.01em; }
+  nav a { color: var(--gray); text-decoration: none; font-size: 13px; margin-left: 22px; }
+  nav a:hover { color: var(--ink); }
 
-  .nav-link {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 14px;
-    transition: color .15s;
-  }
-  .nav-link:hover { color: var(--paper); }
-
-  /* ── 主张 ───────────────────────────────── */
-  .hero { padding: 56px 0 40px; }
+  /* ── 主张 ─────────────────────────────── */
+  .hero { text-align: center; padding: 76px 0 44px; }
 
   h1 {
-    font-size: clamp(38px, 6vw, 62px);
-    line-height: 1.08;
-    letter-spacing: -0.035em;
-    font-weight: 680;
-    margin: 0 0 20px;
+    font-size: clamp(40px, 6.4vw, 64px);
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+    font-weight: 700;
+    margin: 0 0 18px;
   }
 
   .lede {
-    font-size: clamp(16px, 2vw, 19px);
-    color: var(--paper-dim);
-    max-width: 34em;
-    margin: 0 0 36px;
+    font-size: clamp(17px, 2.1vw, 21px);
+    line-height: 1.45;
+    color: var(--gray);
+    max-width: 30em;
+    margin: 0 auto 30px;
   }
+  .lede b { color: var(--ink); font-weight: 600; }
 
-  /* ── 活的草稿：本页的主角 ─────────────────── */
-  .pad {
-    background: #fbf8f1;
-    border-radius: 14px;
-    padding: 26px 0;
-    box-shadow: 0 24px 60px rgba(0,0,0,.45);
-    font-family: var(--mono);
-    font-size: 14.5px;
-  }
-
-  .row {
-    display: flex;
-    align-items: baseline;
-    gap: 20px;
-    padding: 5px 26px;
-    color: #333d4f;
-    opacity: 0;
-    animation: rise .5s ease forwards;
-  }
-  @keyframes rise { to { opacity: 1; } }
-
-  .row:hover { background: rgba(17,148,82,.055); }
-  .row .expr { flex: 1; white-space: pre; overflow-x: auto; }
-  .row .val {
-    color: var(--result-deep);
-    font-weight: 500;
-    text-align: right;
-    white-space: nowrap;
-  }
-  .row .val.warn { color: #b91c1c; font-weight: 400; }
-  .row.note { color: #a8a294; }
-  .row.gap { height: 12px; padding: 0; }
-
-  /* 悬停揭示量纲推导——这是别处看不到的东西 */
-  .row[data-dim]::after {
-    content: attr(data-dim);
-    position: absolute;
-    right: 26px;
-    transform: translateY(20px);
-    font-size: 11.5px;
-    color: var(--amber);
-    opacity: 0;
-    transition: opacity .18s;
-    pointer-events: none;
-  }
-  .row { position: relative; }
-  .row[data-dim]:hover::after { opacity: 1; }
-
-  .pad-foot {
-    margin-top: 14px;
-    padding: 12px 26px 0;
-    border-top: 1px solid #e8e2d5;
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #a8a294;
-  }
-
-  .hint {
-    margin: 14px 2px 0;
-    font-size: 12.5px;
-    color: var(--muted);
-  }
-
-  /* ── 下载 ───────────────────────────────── */
-  .get { padding: 44px 0 8px; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    background: var(--paper);
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink); color: #fff;
+    text-decoration: none; font-weight: 500; font-size: 15px;
+    padding: 12px 24px; border-radius: 980px;
+    transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--hair); }
+
+  .fineprint { color: var(--gray-2); font-size: 12.5px; margin-top: 16px; }
+
+  /* ── 真实截图 ─────────────────────────── */
+  .shot { padding: 8px 0 76px; }
+  .shot img {
+    width: 100%; height: auto; display: block;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 24px 68px rgba(0,0,0,.22);
+  }
+  .caption {
+    text-align: center; color: var(--gray-2);
+    font-size: 12.5px; margin-top: 16px;
+  }
+
+  /* ── 三件事 ───────────────────────────── */
+  .band { background: var(--bg-2); padding: 76px 0; }
+
+  h2 {
+    font-size: clamp(26px, 3.4vw, 36px);
+    letter-spacing: -0.02em; font-weight: 650;
+    text-align: center; margin: 0 0 8px;
+  }
+  .sub { text-align: center; color: var(--gray); font-size: 16px; margin: 0 0 46px; }
+
+  .grid { display: grid; gap: 20px; }
+  @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .card {
+    background: #fff; border-radius: 16px; padding: 26px 24px 24px;
+  }
+  .card h3 {
+    font-size: 17px; font-weight: 620; letter-spacing: -0.01em;
+    margin: 0 0 9px;
+  }
+  .card p { color: var(--gray); font-size: 14.5px; margin: 0 0 18px; line-height: 1.55; }
+
+  .snip {
+    font-family: var(--mono); font-size: 12.5px; line-height: 1.85;
+    background: #1d1d1f; color: #d6d6db;
+    border-radius: 9px; padding: 13px 15px;
+    overflow-x: auto; white-space: pre;
+  }
+  .snip .g { color: #4ade80; }
+  .snip .r { color: #ff8a80; }
+  .snip .a { color: #e39a3c; }
+  .snip .d { color: #86868b; }
+
+  /* ── 更多能力 ─────────────────────────── */
+  .more { padding: 76px 0 20px; }
+  .rows { border-top: 1px solid var(--hair); }
+  .rowline {
+    display: grid; gap: 6px 28px;
+    padding: 20px 2px;
+    border-bottom: 1px solid var(--hair);
+  }
+  @media (min-width: 700px) { .rowline { grid-template-columns: 210px 1fr; } }
+  .rowline dt { font-weight: 600; font-size: 15px; }
+  .rowline dd { margin: 0; color: var(--gray); font-size: 14.5px; }
+  .rowline code {
+    font-family: var(--mono); font-size: 13px;
+    background: var(--bg-2); padding: 2px 6px; border-radius: 5px;
     color: var(--ink);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 15px;
-    padding: 13px 24px;
-    border-radius: 10px;
-    transition: transform .12s, box-shadow .12s;
-  }
-  .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(245,241,232,.16); }
-  .btn:active { transform: none; }
-
-  .meta { color: var(--muted); font-size: 13px; margin-top: 12px; }
-
-  /* ── 三件事 ─────────────────────────────── */
-  .why { padding: 64px 0 40px; border-top: 1px solid var(--rule); margin-top: 64px; }
-
-  .why h2 {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 32px;
   }
 
-  .items { display: grid; gap: 34px; }
-  @media (min-width: 720px) { .items { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
-
-  .item h3 {
-    font-size: 17px;
-    font-weight: 620;
-    letter-spacing: -0.01em;
-    margin: 0 0 10px;
-  }
-  .item p { color: var(--paper-dim); font-size: 14.5px; margin: 0 0 14px; }
-
-  .demo {
-    font-family: var(--mono);
-    font-size: 12.5px;
-    background: var(--ink-soft);
-    border-radius: 8px;
-    padding: 12px 14px;
-    color: var(--paper-dim);
-    line-height: 1.75;
-  }
-  .demo b { color: var(--result); font-weight: 500; }
-  .demo i { color: #f87171; font-style: normal; }
-  .demo em { color: var(--amber); font-style: normal; }
+  /* ── 结尾 ─────────────────────────────── */
+  .end { text-align: center; padding: 80px 0 90px; }
+  .end h2 { margin-bottom: 22px; }
 
   footer {
-    border-top: 1px solid var(--rule);
-    margin-top: 72px;
-    padding: 26px 0 48px;
-    color: var(--muted);
-    font-size: 13px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
+    border-top: 1px solid var(--hair);
+    padding: 22px 0 40px;
+    color: var(--gray-2); font-size: 12.5px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
   }
-  footer a { color: var(--muted); }
+  footer a { color: var(--gray-2); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .row { animation: none; opacity: 1; }
-    .btn { transition: none; }
-  }
-  a:focus-visible, .btn:focus-visible {
-    outline: 2px solid var(--amber);
-    outline-offset: 3px;
-  }
+  a:focus-visible, .btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 </style>
 
-<div class="wrap">
-  <header>
-    <div class="brand"><div class="mark"></div><span>Napkin</span></div>
-    <a class="nav-link" href="#download">下载</a>
-  </header>
+<nav>
+  <div class="wrap">
+    <span class="brand"><span class="mark"></span>Napkin</span>
+    <span>
+      <a href="#why">为什么不一样</a>
+      <a href="#more">能力</a>
+      <a href="https://github.com/casperkwok/napkin-app/releases">下载</a>
+    </span>
+  </div>
+</nav>
 
-  <section class="hero">
-    <h1>估算也要算对</h1>
-    <p class="lede">
-      给做收入和增长的人用的草稿纸。它知道「人」不能加「元」，
-      知道涨了 24% 也可能不显著，也知道你的假设本来就是个大概。
-    </p>
-
-    <div class="pad">
-      <div class="row note" style="animation-delay:.05s"><span class="expr"># 这个功能值得做吗</span></div>
-      <div class="row gap"></div>
-      <div class="row" style="animation-delay:.12s" data-dim="users/day">
-        <span class="expr">日活 = 12000 users/day</span><span class="val">12,000 users/day</span>
-      </div>
-      <div class="row" style="animation-delay:.19s">
-        <span class="expr">客单价 = 39 ± 15% ¥/user</span><span class="val">¥39/user ± 15%</span>
-      </div>
-      <div class="row" style="animation-delay:.26s" data-dim="users/day × ¥/user × day → ¥">
-        <span class="expr">月收入 = 日活 × 2.4% × 客单价 × 30 day</span><span class="val">¥336,960 ± 50,544</span>
-      </div>
-
-      <div class="row gap"></div>
-      <div class="row note" style="animation-delay:.33s"><span class="expr"># 灰度实验：新版真的更好吗</span></div>
-      <div class="row" style="animation-delay:.40s">
-        <span class="expr">A: 12400 曝光 / 620 转化</span>
-      </div>
-      <div class="row" style="animation-delay:.47s">
-        <span class="expr">B: 12180 曝光 / 683 转化</span><span class="val">+12.15% · p=0.033 ✓ 显著</span>
-      </div>
-
-      <div class="row gap"></div>
-      <div class="row" style="animation-delay:.54s">
-        <span class="expr">100 users + ¥50</span><span class="val warn">量纲不同，不能相加</span>
-      </div>
-
-      <div class="pad-foot"><span>⌥Space 随时呼出</span><span>Esc 收起</span></div>
-    </div>
-    <p class="hint">把鼠标停在带单位的行上，看它怎么推导出结果的单位。</p>
-  </section>
-
-  <section class="get" id="download">
+<div class="wrap hero">
+  <h1>估算也要算对</h1>
+  <p class="lede">
+    给做收入和增长的人用的草稿纸。它知道<b>「人」不能加「元」</b>，
+    知道<b>涨了 24% 也可能不显著</b>，也知道你的假设本来就是个大概。
+  </p>
+  <div class="cta">
     <a class="btn" href="https://github.com/casperkwok/napkin-app/releases/latest/download/Napkin.dmg">
       下载 macOS 版
     </a>
-    <p class="meta">需要 macOS 14 或更新版本 · Apple Silicon 与 Intel 通用 · 已签名公证</p>
-  </section>
+    <a class="btn ghost" href="#why">看它怎么算</a>
+  </div>
+  <p class="fineprint">macOS 14 或更新版本 · Apple Silicon 与 Intel 通用 · 已签名公证 · 1.7 MB</p>
+</div>
 
-  <section class="why">
+<div class="wrap shot">
+  <img src="img/shot-dark.png" alt="Napkin 界面：左侧算式，右侧结果。含单位推导、A/B 显著性与量纲错误提示。" width="1440" height="1000">
+  <p class="caption">⌥Space 随时呼出，Esc 收起，焦点还给刚才那个 App</p>
+</div>
+
+<section class="band" id="why">
+  <div class="wrap">
     <h2>三件别的计算器不做的事</h2>
-    <div class="items">
-      <div class="item">
+    <p class="sub">不是功能更多，是少给你几个错的答案。</p>
+    <div class="grid">
+
+      <div class="card">
         <h3>单位不对就不给答案</h3>
         <p>把人数和金额加在一起，多数工具会安静地给你一个数。那个数会被写进汇报。</p>
-        <div class="demo">100 users + ¥50<br><i>量纲不同，不能相加</i></div>
+        <div class="snip">100 users + ¥50
+<span class="r">users 和 CNY 量纲不同，不能相加</span></div>
       </div>
-      <div class="item">
+
+      <div class="card">
         <h3>涨了不等于赢了</h3>
-        <p>提升 24% 看着很香。但样本不够时，那可能只是噪声——置信区间跨过了零。</p>
-        <div class="demo">A: 1000 / 50<br>B: 1000 / 62<br><b>+24.00%</b> · p=0.243 <i>✗ 不显著</i></div>
+        <p>提升 24% 看着很香。但样本不够时那可能只是噪声——置信区间跨过了零。</p>
+        <div class="snip">A: 1000 曝光 / 50 转化
+B: 1000 曝光 / 62 转化
+<span class="g">+24.00%</span> · p=0.243 <span class="r">✗ 不显著</span></div>
       </div>
-      <div class="item">
+
+      <div class="card">
         <h3>假设是大概，答案也该是</h3>
         <p>你从不知道客单价确切是多少。写下浮动范围，误差会一路传播到结论。</p>
-        <div class="demo">客单价 = 3 <em>± 20%</em><br>月收入 = 日活 × 客单价 × 30<br><b>1,080,000 ± 216,000</b></div>
+        <div class="snip">客单价 = 39 ¥/user <span class="a">± 15%</span>
+月收入 = 日活 × 转化率 × 客单价 × 30 day
+<span class="g">¥336,960 ± 50,544</span></div>
       </div>
-    </div>
-  </section>
 
+    </div>
+  </div>
+</section>
+
+<section class="wrap more" id="more">
+  <h2>还会这些</h2>
+  <p class="sub">都是做收入的人每天真会用到的。</p>
+  <dl class="rows">
+
+    <div class="rowline">
+      <dt>业务量纲推导</dt>
+      <dd><code>users/day × ¥/user × day</code> 自动得出 <code>¥</code>。单位跟着算式走，不用自己盯。</dd>
+    </div>
+
+    <div class="rowline">
+      <dt>LLM token 成本</dt>
+      <dd><code>2k tokens/user × $3/Mtok</code> 直接得到每用户成本。不内置价格表——那种表过期比没有更危险。</dd>
+    </div>
+
+    <div class="rowline">
+      <dt>实验要跑多久</dt>
+      <dd><code>样本量(基线 2.4%, 提升 10%) users / 日活</code> → <code>11.2 day</code>。统计和量纲一起算。</dd>
+    </div>
+
+    <div class="rowline">
+      <dt>百分点还是相对变化</dt>
+      <dd><code>5% → 5.61%</code> 同时给 <code>+0.61pp</code> 和 <code>+12.2%</code>。这两个数在汇报里是完全不同的故事。</dd>
+    </div>
+
+    <div class="rowline">
+      <dt>命名变量</dt>
+      <dd>写 <code>月收入 = 日活 × 客单价 × 30</code>，改一个假设整段重算。三天后回来还看得懂。</dd>
+    </div>
+
+    <div class="rowline">
+      <dt>算完带得走</dt>
+      <dd>⌘⇧A 复制整份草稿，算式与结果对齐；⌘⇧M 复制为 Markdown。</dd>
+    </div>
+
+    <div class="rowline">
+      <dt>钱不会算错</dt>
+      <dd>定点十进制，<code>0.1 + 0.2</code> 就是 <code>0.3</code>。多数计算器在这里会给你 <code>0.30000000000000004</code>。</dd>
+    </div>
+
+  </dl>
+</section>
+
+<section class="wrap end">
+  <h2>下一次估算，试试这个</h2>
+  <div class="cta">
+    <a class="btn" href="https://github.com/casperkwok/napkin-app/releases/latest/download/Napkin.dmg">
+      下载 macOS 版
+    </a>
+  </div>
+  <p class="fineprint">macOS 14 或更新版本 · 已签名公证</p>
+</section>
+
+<div class="wrap">
   <footer>
     <span>Napkin · 一份算得对的草稿纸</span>
     <span><a href="https://github.com/casperkwok/napkin-app/releases">历史版本</a></span>
