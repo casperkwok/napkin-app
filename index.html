@@ -59,27 +59,39 @@
   nav a { color: var(--gray); text-decoration: none; font-size: 13px; margin-left: 22px; }
   nav a:hover { color: var(--ink); }
 
-  /* ── 主张 ─────────────────────────────── */
-  .hero { text-align: center; padding: 76px 0 44px; }
+  /* ── 主张：左文右图 ───────────────────── */
+  .hero {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+    padding: 64px 0 72px;
+  }
+  @media (min-width: 900px) {
+    .hero {
+      grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+      gap: 56px;
+      padding: 84px 0 96px;
+    }
+  }
 
   h1 {
-    font-size: clamp(40px, 6.4vw, 64px);
-    line-height: 1.06;
+    font-size: clamp(38px, 5vw, 54px);
+    line-height: 1.08;
     letter-spacing: -0.028em;
     font-weight: 700;
     margin: 0 0 18px;
   }
 
   .lede {
-    font-size: clamp(17px, 2.1vw, 21px);
-    line-height: 1.45;
+    font-size: clamp(16px, 1.7vw, 18.5px);
+    line-height: 1.5;
     color: var(--gray);
-    max-width: 30em;
-    margin: 0 auto 30px;
+    margin: 0 0 28px;
   }
   .lede b { color: var(--ink); font-weight: 600; }
 
-  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .end .cta { justify-content: center; }
 
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
@@ -94,16 +106,14 @@
   .fineprint { color: var(--gray-2); font-size: 12.5px; margin-top: 16px; }
 
   /* ── 真实截图 ─────────────────────────── */
-  .shot { padding: 8px 0 76px; }
   .shot img {
     width: 100%; height: auto; display: block;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 24px 68px rgba(0,0,0,.22);
+    border-radius: 11px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08), 0 22px 60px rgba(0,0,0,.24);
   }
-  .caption {
-    text-align: center; color: var(--gray-2);
-    font-size: 12.5px; margin-top: 16px;
-  }
+  .caption { color: var(--gray-2); font-size: 12.5px; margin: 14px 2px 0; }
+  /* 窄屏时截图回到文字下方，且不必贴边 */
+  @media (max-width: 899px) { .caption { text-align: center; } }
 
   /* ── 三件事 ───────────────────────────── */
   .band { background: var(--bg-2); padding: 76px 0; }
@@ -182,23 +192,25 @@
 </nav>
 
 <div class="wrap hero">
-  <h1>估算也要算对</h1>
-  <p class="lede">
-    给做收入和增长的人用的草稿纸。它知道<b>「人」不能加「元」</b>，
-    知道<b>涨了 24% 也可能不显著</b>，也知道你的假设本来就是个大概。
-  </p>
-  <div class="cta">
-    <a class="btn" href="https://github.com/casperkwok/napkin-app/releases/latest/download/Napkin.dmg">
-      下载 macOS 版
-    </a>
-    <a class="btn ghost" href="#why">看它怎么算</a>
+  <div>
+    <h1>估算也要算对</h1>
+    <p class="lede">
+      给做收入和增长的人用的草稿纸。它知道<b>「人」不能加「元」</b>，
+      知道<b>涨了 24% 也可能不显著</b>，也知道你的假设本来就是个大概。
+    </p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/casperkwok/napkin-app/releases/latest/download/Napkin.dmg">
+        下载 macOS 版
+      </a>
+      <a class="btn ghost" href="#why">看它怎么算</a>
+    </div>
+    <p class="fineprint">macOS 14 或更新版本 · 已签名公证 · 1.7 MB</p>
   </div>
-  <p class="fineprint">macOS 14 或更新版本 · Apple Silicon 与 Intel 通用 · 已签名公证 · 1.7 MB</p>
-</div>
 
-<div class="wrap shot">
-  <img src="img/shot-dark.png" alt="Napkin 界面：左侧算式，右侧结果。含单位推导、A/B 显著性与量纲错误提示。" width="1440" height="1000">
-  <p class="caption">⌥Space 随时呼出，Esc 收起，焦点还给刚才那个 App</p>
+  <div class="shot">
+    <img src="img/shot-dark.png" alt="Napkin 界面：左侧算式，右侧结果。含单位推导、A/B 显著性与量纲错误提示。" width="1440" height="1000">
+    <p class="caption">⌥Space 随时呼出，Esc 收起，焦点还给刚才那个 App</p>
+  </div>
 </div>
 
 <section class="band" id="why">
@@ -241,7 +253,7 @@ B: 1000 曝光 / 62 转化
 
     <div class="rowline">
       <dt>业务量纲推导</dt>
-      <dd><code>users/day × ¥/user × day</code> 自动得出 <code>¥</code>。单位跟着算式走，不用自己盯。</dd>
+      <dd><code>users/day × ¥/user × day</code> 自动得出 <code>¥</code>，中文界面下显示成 <code>人/天</code>。单位跟着算式走，不用自己盯。</dd>
     </div>
 
     <div class="rowline">
@@ -251,7 +263,7 @@ B: 1000 曝光 / 62 转化
 
     <div class="rowline">
       <dt>实验要跑多久</dt>
-      <dd><code>样本量(基线 2.4%, 提升 10%) users / 日活</code> → <code>11.2 day</code>。统计和量纲一起算。</dd>
+      <dd><code>样本量(基线 2.4%, 提升 10%) users / 日活</code> → <code>11.2 天</code>。统计和量纲一起算。</dd>
     </div>
 
     <div class="rowline">
