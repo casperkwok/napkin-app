@@ -52,6 +52,7 @@
   .fineprint { color: var(--gray-2); font-size: 12.5px; margin-top: 16px; }
 
   /* ── 真实截图 ─────────────────────────── */
+  /* 两张截图都在 DOM 里，base.css 按 data-lang 隐掉一张 */
   .shot img {
     width: 100%; height: auto; display: block;
     border-radius: 11px;
@@ -152,8 +153,10 @@
   </div>
 
   <div class="shot">
-    <img src="img/shot-dark.png" width="1440" height="1000"
-      alt="Napkin: expressions on the left, results on the right, with unit derivation and A/B significance.">
+    <img lang="en" src="img/shot-en.png" width="1600" height="1040"
+      alt="Napkin: expressions on the left, results on the right — unit derivation, AI cost, A/B significance.">
+    <img lang="zh" src="img/shot-zh.png" width="1600" height="1040"
+      alt="Napkin 界面：左侧算式，右侧结果——单位推导、AI 成本、A/B 显著性。">
     <p class="caption">
       <span lang="en"><kbd>⌥</kbd><kbd>Space</kbd> to call it up, <kbd>Esc</kbd> to put it away — focus goes back to where you were</span>
       <span lang="zh"><kbd>⌥</kbd><kbd>Space</kbd> 呼出，<kbd>Esc</kbd> 收起——焦点回到你刚才那个窗口</span>
@@ -253,9 +256,9 @@ DAU × ARPU × 30 day
       <dt><span lang="en">How long the test has to run</span><span lang="zh">这个实验要跑几天</span></dt>
       <dd>
         <span lang="en">Sample size for the lift you care about, divided by daily traffic:
-          <code>samplesize(2.4%, 10%) users / (12k users/day)</code> → <code>11.2 day</code></span>
+          <code>DAU = 12k users/day</code>，然后 <code>samplesize(2.4%, 10%) users / DAU</code> → <code>11.2 day</code></span>
         <span lang="zh">检出目标提升需要多少样本，除以日活就是天数：
-          <code>样本量(2.4%, 10%) users / (12k users/day)</code> → <code>11.2 天</code></span>
+          <code>样本量(2.4%, 10%) users / 日活</code> → <code>11.2 天</code></span>
       </dd>
     </div>
 

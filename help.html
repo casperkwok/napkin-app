@@ -407,22 +407,25 @@
       <div class="ex" lang="en">
         <div class="row"><code>samplesize(2.4%, 10%)</code><span class="res">66,944 per arm (133,888 total)</span></div>
         <div class="row"><code>mde(2.4%, 5000)</code><span class="res">+38.9%</span></div>
-        <div class="row"><code>samplesize(2.4%, 10%) users / (12k users/day)</code><span class="res">11.2 day</span></div>
+        <div class="row"><code>DAU = 12k users/day</code><span class="res">12,000 users/day</span></div>
+        <div class="row"><code>samplesize(2.4%, 10%) users / DAU</code><span class="res">11.2 day</span></div>
       </div>
       <div class="ex" lang="zh">
         <div class="row"><code>样本量(基线 2.4%, 提升 10%)</code><span class="res">每组 66,944（共 133,888）</span></div>
         <div class="row"><code>mde(基线 2.4%, 每组 5000)</code><span class="res">+38.9%</span></div>
-        <div class="row"><code>样本量(2.4%, 10%) users / (12k users/day)</code><span class="res">11.2 天</span></div>
+        <div class="row"><code>日活 = 12k users/day</code><span class="res">12,000 人/天</span></div>
+        <div class="row"><code>样本量(2.4%, 10%) users / 日活</code><span class="res">11.2 天</span></div>
       </div>
       <p>
         <span lang="en"><code>samplesize</code> answers "how many do I need?";
           <code>mde</code> answers the reverse — "with the traffic I have, how big does the
           effect need to be before I could detect it?" Both assume 80% power and α = 0.05.
-          Note the parentheses in the division — without them <code>users/day</code> isn't
-          treated as one unit.</span>
+          If you divide by a literal rate rather than a variable, parenthesize it:
+          <code>/ (12k users/day)</code> — otherwise <code>day</code> reads as a second division.</span>
         <span lang="zh"><code>样本量</code> 回答「我需要多少人」；<code>mde</code> 回答反过来的问题
           ——「就这么点流量，效果得多大我才看得出来」。两者都按 80% 功效、α = 0.05 算。
-          除法要加括号：<code>/ (12k users/day)</code>，不加的话 <code>users/day</code> 不会当成一个整体。</span>
+          除数如果直接写成带单位的字面量，要加括号：<code>/ (12k users/day)</code>——
+          不加的话 <code>day</code> 会被当成又一次除法。用变量名就没这个问题。</span>
       </p>
       <p class="note">
         <span lang="en"><b>Two-tailed only.</b> One-tailed tests halve the p-value and are the
