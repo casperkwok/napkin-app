@@ -2,5 +2,22 @@
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>Napkin</title>
+    <item>
+      <title>0.1.1</title>
+      <sparkle:version>0.1.1</sparkle:version>
+      <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <pubDate>Tue, 21 Jul 2026 00:55:06 +0000</pubDate>
+      <description><![CDATA[
+Napkin 现在会自己更新了。
+
+装了这一版之后，以后的新版本会在后台自动检查、下载、安装——不用再回官网重新下载。更新前会验证签名，确保装上的确实是我们发的版本。
+
+也可以随时手动检查：**设置 → 检查更新**，或菜单栏「Napkin → 检查更新…」。
+
+其余是一些内部修整，包括修正了「关于」里显示错误的版本号。
+]]></description>
+      <enclosure url="https://github.com/casperkwok/napkin-app/releases/download/v0.1.1/Napkin-0.1.1.zip" sparkle:edSignature="cU/0yz8syt4+mZdFutvZ266nf69K9vJVyz47wb9V5ONcoCmCLLkw14PChj4AvupeSplYS8ZbKbH7V8AVLkZfDg==" length="2420045" type="application/octet-stream"/>
+    </item>
   </channel>
 </rss>
