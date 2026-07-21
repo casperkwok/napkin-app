@@ -3,6 +3,21 @@
   <channel>
     <title>Napkin</title>
     <item>
+      <title>0.1.2</title>
+      <sparkle:version>0.1.2</sparkle:version>
+      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <pubDate>Tue, 21 Jul 2026 02:04:52 +0000</pubDate>
+      <description><![CDATA[
+这一版修好了三处会让人踩坑的地方。
+
+- **变量名可以带空格了**。`monthly cost`、`AI bill`、`cost per user` 这些写法以前会报错，现在正常。中文名一直没这问题。
+- **`± 0.5pp` 不再算错**。在百分比上写「上下 0.5 个百分点」的浮动，误差会正确地一路传播，不再炸成离谱的大数。
+- **连着两行 `A:` 不会再乱配对**。以前第二行会拿第一行当对照组，算出假的「+0.00%」；现在只有 A→B 才算一次实验。
+]]></description>
+      <enclosure url="https://github.com/casperkwok/napkin-app/releases/download/v0.1.2/Napkin-0.1.2.zip" sparkle:edSignature="WASQ3vhmDt+v59sV7Tq90BtL2XTysE5j31ldPQ9Xaf/hfCZ4pYXFyeosQgLVj0VbO2yDjtLKk20XjefStw/pCw==" length="2424471" type="application/octet-stream"/>
+    </item>
+    <item>
       <title>0.1.1</title>
       <sparkle:version>0.1.1</sparkle:version>
       <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>

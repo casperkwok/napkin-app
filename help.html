@@ -314,9 +314,11 @@
       <p class="lead">
         <span lang="en">Name your assumptions instead of scattering raw numbers.
           Change one and everything below recomputes. Both <code>=</code> and
-          <code>:</code> work; names can be in any language.</span>
+          <code>:</code> work; names can be in any language and can contain spaces
+          (<code>monthly cost</code>, <code>AI bill</code>).</span>
         <span lang="zh">给假设起名字，别把裸数字撒得到处都是。改一个，下面全部重算。
-          <code>=</code> 和 <code>:</code> 都行，名字可以用中文。</span>
+          <code>=</code> 和 <code>:</code> 都行，名字可以用中文，也可以带空格
+          （<code>monthly cost</code>、<code>AI bill</code>）。</span>
       </p>
       <div class="ex" lang="en">
         <div class="row"><code>DAU = 12,000 users/day</code><span class="res">12,000 users/day</span></div>
@@ -448,13 +450,15 @@
       </p>
       <div class="ex" lang="en">
         <div class="row"><code>ARPU = 39 $/user ± 15%</code><span class="res">$39/user ± 15%</span></div>
+        <div class="row"><code>conv = 3% ± 0.5pp</code><span class="res">3% ± 0.5pp</span></div>
         <div class="row"><code>DAU = 12k users/day</code><span class="res">12,000 users/day</span></div>
-        <div class="row"><code>DAU × ARPU × 30 day</code><span class="res">$14,040,000.00 ± 2,106,000</span></div>
+        <div class="row"><code>DAU × conv × ARPU × 30 day</code><span class="res">$421,200.00 ± 94,444.44</span></div>
       </div>
       <div class="ex" lang="zh">
         <div class="row"><code>客单价 = 39 ¥/user ± 15%</code><span class="res">¥39/人 ± 15%</span></div>
+        <div class="row"><code>转化率 = 3% ± 0.5pp</code><span class="res">3% ± 0.5pp</span></div>
         <div class="row"><code>日活 = 12k users/day</code><span class="res">12,000 人/天</span></div>
-        <div class="row"><code>日活 × 客单价 × 30 day</code><span class="res">¥14,040,000.00 ± 2,106,000</span></div>
+        <div class="row"><code>日活 × 转化率 × 客单价 × 30 day</code><span class="res">¥421,200.00 ± 94,444.44</span></div>
       </div>
       <p>
         <span lang="en">Errors combine as root-sum-square, not by adding up. Adding them
@@ -511,9 +515,6 @@
         <tr><td><code>39 ± 15% $/user</code></td>
             <td><span lang="en">Unit after the <code>±</code> is misread. Write <code>39 $/user ± 15%</code></span>
                 <span lang="zh">单位写在 <code>±</code> 后面会解析错。写成 <code>39 ¥/user ± 15%</code></span></td></tr>
-        <tr><td><code>± 0.5pp</code></td>
-            <td><span lang="en">The <code>pp</code> suffix is dropped inside <code>±</code> — it reads as ±0.5, not ±0.5 points. Use <code>± 0.5%</code></span>
-                <span lang="zh"><code>±</code> 里的 <code>pp</code> 会被丢掉，当成 ±0.5 而不是 0.5 个点。写 <code>± 0.5%</code></span></td></tr>
         <tr><td><span lang="en">Solving for a variable</span><span lang="zh">反解变量</span></td>
             <td><span lang="en">Only simple cases. There's no general equation solver yet</span>
                 <span lang="zh">只支持简单情形，还没有通用方程求解</span></td></tr>
