@@ -74,11 +74,17 @@
   .grid { display: grid; gap: 20px; }
   @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 
-  .card { background: #fff; border-radius: 16px; padding: 26px 24px 24px; }
+  /* flex 纵向 + 代码块 margin-top:auto，让三张卡片的代码块底部对齐 ——
+     否则说明文字行数不同（2/3/4 行），代码块高低参差 */
+  .card {
+    background: #fff; border-radius: 16px; padding: 26px 24px 24px;
+    display: flex; flex-direction: column;
+  }
   .card h3 { font-size: 17px; font-weight: 620; letter-spacing: -0.01em; margin: 0 0 9px; }
   .card p { color: var(--gray); font-size: 14.5px; margin: 0 0 18px; line-height: 1.55; }
 
   .snip {
+    margin-top: auto;
     font-family: var(--mono); font-size: 12.5px; line-height: 1.85;
     background: #1d1d1f; color: #d6d6db;
     border-radius: 9px; padding: 13px 15px;
